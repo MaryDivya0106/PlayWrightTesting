@@ -1,0 +1,56 @@
+pipeline {
+    agent any
+
+    environment {
+        // Define any environment variables if needed
+        NODE_ENV = 'test'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout the source code from SCM
+                checkout scm
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+                // Install project dependencies
+                sh 'npm ci'
+            }
+        }
+        stage('Run Playwright Tests') {
+            steps {
+                // Execute Playwright tests
+                sh 'npx playwright test'
+            }
+        }
+        stage('Publish Test Results') {
+            steps {
+                // Archive test results or publish reports if needed
+                publishHTML(target: [
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: true,
+                    reportDir: 'playwright-report',
+                    reportFiles: 'index.html',
+                    reportName: 'Playwright Test Report'
+                ])
+            }
+        }
+    }
+
+    post {
+        always {
+            // Clean up the workspace
+            cleanWs()
+        }
+        failure {
+            // Add notifications for failure (e.g., email, Slack, etc.)
+            echo 'Build failed! Check the logs.'
+        }
+        success {
+            echo 'Build completed successfully!'
+        }
+    }
+}
