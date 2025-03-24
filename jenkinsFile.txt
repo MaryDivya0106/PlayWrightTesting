@@ -1,56 +1,40 @@
 pipeline {
     agent any
-
-    environment {
-        // Define any environment variables if needed
-        NODE_ENV = 'test'
-    }
-
+   
     stages {
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
-                // Checkout the source code from SCM
-                checkout scm
+                echo 'Checking out code...'
+                checkout scm // Jenkins will pull the latest code from your Git repository
             }
         }
         stage('Install Dependencies') {
             steps {
-                // Install project dependencies
-                sh 'npm ci'
+                echo 'Installing dependencies...'
+                sh 'npm install'
             }
         }
-        stage('Run Playwright Tests') {
+        stage('Build') {
             steps {
-                // Execute Playwright tests
-                sh 'npx playwright test'
+                echo 'Building the project...'
+                sh 'npm run build' // Replace with your actual build script if different
             }
         }
-        stage('Publish Test Results') {
+        stage('Run Tests') {
             steps {
-                // Archive test results or publish reports if needed
-                publishHTML(target: [
-                    allowMissing: false,
-                    alwaysLinkToLastBuild: true,
-                    keepAll: true,
-                    reportDir: 'playwright-report',
-                    reportFiles: 'index.html',
-                    reportName: 'Playwright Test Report'
-                ])
+                echo 'Running Playwright tests...'
+                sh 'npx playwright test' // Runs Playwright tests as defined in your config
             }
         }
-    }
-
-    post {
-        always {
-            // Clean up the workspace
-            cleanWs()
-        }
-        failure {
-            // Add notifications for failure (e.g., email, Slack, etc.)
-            echo 'Build failed! Check the logs.'
-        }
-        success {
-            echo 'Build completed successfully!'
+        stage('Publish Report') {
+            steps {
+                echo 'Publishing test report...'
+                publishHTML target: [
+                    reportName: 'Playwright Test Report',
+                    reportDir: 'playwright-report', // Directory where Playwright's test report is saved
+                    reportFiles: 'index.html'      // Test report file
+                ]
+            }
         }
     }
 }
