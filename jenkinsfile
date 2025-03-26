@@ -19,12 +19,7 @@ pipeline {
                 sh 'npm install'
             }
         }
-        stage('Build') {
-            steps {
-                echo 'Building the project...'
-                sh 'npm run build' // Replace with your actual build script if different
-            }
-        }
+       
         stage('Run Tests') {
             steps {
                 echo 'Running Playwright tests...'
