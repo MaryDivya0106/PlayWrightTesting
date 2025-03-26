@@ -1,6 +1,10 @@
 pipeline {
     agent any
    
+       tools {
+        nodejs 'NoNodeJs_23' // Replace with the name you set in Global Tool Configuration
+    }
+
     stages {
         stage('Checkout Code') {
             steps {
@@ -8,6 +12,7 @@ pipeline {
                 checkout scm // Jenkins will pull the latest code from your Git repository
             }
         }
+        
         stage('Install Dependencies') {
             steps {
                 echo 'Installing dependencies...'
