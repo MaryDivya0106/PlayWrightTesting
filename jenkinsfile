@@ -19,7 +19,14 @@ pipeline {
                 sh 'npm install'
             }
         }
-       
+
+        stage('Install Browsers for Playwright') {
+            steps {
+                echo 'Installing Playwright browsers...'
+                sh 'npx playwright install' // Ensures Playwright browsers are available
+            }
+        }
+     
         stage('Run Tests') {
             steps {
                 echo 'Running Playwright tests...'
