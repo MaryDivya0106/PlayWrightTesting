@@ -8,8 +8,16 @@
         "paths": ["tests/features/"],
 
         "PublishQuiet": "true",
-        "dryRun": true,
+        "dryRun": false,
 
-        "require": ["tests/steps/*.ts"]
+        "require": ["tests/steps/*.ts", "hooks/hooks.ts"],
+        
+
+        "requireModule": ["ts-node/register"],
+        "format": ["html: test-results/cucumber-report.html",
+        "json:test-results/cucumber-report.json"
+
+      ]
+
     }
 }

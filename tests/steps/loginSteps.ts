@@ -1,21 +1,26 @@
 
-import {Given, When, Then} from "@cucumber/cucumber"
+import {Given, When, Then, setDefaultTimeout} from "@cucumber/cucumber";
+import {chromium, Page, Browser, expect} from "@playwright/test";
+import { PageFixture} from "../../hooks/pagefixture";
 
+setDefaultTimeout(30 * 1000); // 60 seconds
 Given('I navigate to website', async function () {
-           //my test
+           
+           await PageFixture.page.goto("https://www.saucedemo.com/");
+
+         });
+
+         When('I enter {string} and {string}', async function (username, password) {
+           await PageFixture.page.getByPlaceholder("Username").fill(username);
+             await PageFixture.page.getByPlaceholder("Password").fill(password);
          });
 
          When('I click login', async function () {
-           // Write code here that turns the phrase above into concrete actions
-           return 'pending';
-         });
-
-         When('I enter {string} and {string}', async function (string, string2) {
-           // Write code here that turns the phrase above into concrete actions
-           return 'pending';
+            await PageFixture.page.locator("input[type='submi']").click();
+          
          });
 
          Then('I can see dashboard page', async function () {
-           // Write code here that turns the phrase above into concrete actions
-           return 'pending';
+           const text = await  PageFixture.page.getByText("secret_sauce")
+           await expect(text).toBeVisible;
          });
